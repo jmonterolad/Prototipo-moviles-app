@@ -30,9 +30,9 @@ free tier de Supabase.
   no se pueden tocar
 - Un día con horarios ocupados muestra un punto ámbar; si ya no queda nada
   libre, punto rojo y el día queda deshabilitado
-- Un bloque ya reservado muestra **quién** lo reservó, de qué sede y a qué
+- Un bloque ya reservado muestra **quién** lo reservó, de qué CD y a qué
   punto de venta va — no se oculta nada
-- **Formulario**: nombre de quien va a usarla, sede (dropdown de las cuatro)
+- **Formulario**: nombre de quien va a usarla, CD (dropdown de las cuatro)
   y punto de venta (texto libre)
 - **`/historial`**: el audit log, cada reserva y cancelación en orden
 
@@ -42,7 +42,7 @@ free tier de Supabase.
 |---|---|
 | Horarios de los bloques | `src/lib/slots.ts` → `TIME_BLOCKS` |
 | Los 5 días de anticipación | `src/lib/slots.ts` → `ADVANCE_DAYS` |
-| Las sedes | `src/lib/sedes.ts` + el enum `Sede` en `prisma/schema.prisma` |
+| Las CDs | `src/lib/cds.ts` + el enum `CD` en `prisma/schema.prisma` |
 | Reglas de reserva | `src/actions/reservations.ts` |
 
 Los horarios que puse (8–12 y 1–5) **son un supuesto mío**. Cuando te

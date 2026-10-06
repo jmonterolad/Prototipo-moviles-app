@@ -19,8 +19,8 @@ import {
   blockLabel,
   formatDateLong,
 } from "@/lib/slots";
-import { sedeLabel } from "@/lib/sedes";
-import { AuditAction, ReservationStatus, Sede } from "@prisma/client";
+import { cdLabel } from "@/lib/cds";
+import { AuditAction, ReservationStatus, CD } from "@prisma/client";
 
 export type ActionResult = { ok: true } | { ok: false; error: string };
 
@@ -29,7 +29,7 @@ export type ReservationDTO = {
   date: string;
   blocks: string[];
   requesterName: string;
-  sede: Sede;
+  cd: CD;
   salesPoint: string;
   createdAt: string;
 };
@@ -42,7 +42,7 @@ export async function createReservation(input: {
   date: string; // "YYYY-MM-DD"
   blocks: string[];
   requesterName: string;
-  sede: Sede;
+  cd: CD;
   salesPoint: string;
 }): Promise<ActionResult> {
   const requesterName = input.requesterName.trim();
@@ -86,7 +86,7 @@ export async function createReservation(input: {
       date: input.date,
       blocks: input.blocks.join(","),
       requesterName,
-      sede: input.sede,
+      cd: input.cd,
       salesPoint,
       status: ReservationStatus.ACTIVE,
     },
@@ -98,7 +98,7 @@ export async function createReservation(input: {
       actorName: requesterName,
       reservationId: reservation.id,
       detail:
-        `${requesterName} (${sedeLabel(input.sede)}) reservó ${formatDateLong(input.date)} — ` +
+        `${requesterName} (${cdLabel(input.cd)}) reservó ${formatDateLong(input.date)} — ` +
         `${input.blocks.map(blockLabel).join(", ")} — destino: ${salesPoint}`,
     },
   });
@@ -151,7 +151,7 @@ export async function getActiveReservations(): Promise<ReservationDTO[]> {
     date: r.date,
     blocks: parseBlocks(r.blocks),
     requesterName: r.requesterName,
-    sede: r.sede,
+    cd: r.cd,
     salesPoint: r.salesPoint,
     createdAt: r.createdAt.toISOString(),
   }));

@@ -22,7 +22,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Sede {
+enum CD {
   ZACAPA
   PROGRESO
   ESCUINTLA
@@ -46,7 +46,7 @@ model Reservation {
   blocks        String            // ids de bloques separados por coma: "08-10,10-12"
 
   requesterName String            // quién va a usar la móvil
-  sede          Sede              // sede de origen (dropdown)
+  cd            CD                // CD de origen (dropdown)
   salesPoint    String            // punto de venta al que la llevan (texto libre)
 
   status        ReservationStatus @default(ACTIVE)

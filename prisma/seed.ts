@@ -1,6 +1,6 @@
 // Seed del demo: unas cuantas reservas de ejemplo para que el calendario
 // no se vea vacío cuando se lo mostrés al cliente.
-import { PrismaClient, Sede, AuditAction } from "@prisma/client";
+import { PrismaClient, CD, AuditAction } from "@prisma/client";
 import { MORNING_BLOCK_IDS, AFTERNOON_BLOCK_IDS, toDateKey } from "../src/lib/slots";
 
 const prisma = new PrismaClient();
@@ -21,21 +21,21 @@ async function main() {
       date: daysFromNow(7),
       blocks: MORNING_BLOCK_IDS,
       requesterName: "Carlos Méndez",
-      sede: Sede.ZACAPA,
+      cd: CD.ZACAPA,
       salesPoint: "Despensa Familiar zona 3",
     },
     {
       date: daysFromNow(9),
       blocks: [AFTERNOON_BLOCK_IDS[0]],
       requesterName: "Ana Lucía Ramírez",
-      sede: Sede.ESCUINTLA,
+      cd: CD.ESCUINTLA,
       salesPoint: "Super Barato Centro",
     },
     {
       date: daysFromNow(12),
       blocks: [...MORNING_BLOCK_IDS, ...AFTERNOON_BLOCK_IDS],
       requesterName: "Jorge Batres",
-      sede: Sede.BARBERENA,
+      cd: CD.BARBERENA,
       salesPoint: "Feria municipal de Barberena",
     },
   ];
@@ -46,7 +46,7 @@ async function main() {
         date: s.date,
         blocks: s.blocks.join(","),
         requesterName: s.requesterName,
-        sede: s.sede,
+        cd: s.cd,
         salesPoint: s.salesPoint,
       },
     });

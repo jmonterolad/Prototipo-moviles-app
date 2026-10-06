@@ -13,10 +13,10 @@ import {
   blockLabel,
   formatDateLong,
 } from "@/lib/slots";
-import { SEDES, sedeLabel } from "@/lib/sedes";
+import { CDS, cdLabel } from "@/lib/cds";
 import { createReservation, cancelReservation } from "@/actions/reservations";
 import type { ReservationDTO } from "@/actions/reservations";
-import type { Sede } from "@prisma/client";
+import type { CD } from "@prisma/client";
 
 type BookingPanelProps = {
   dateKey: string | null;
@@ -26,7 +26,7 @@ type BookingPanelProps = {
 export function BookingPanel({ dateKey, reservationsForDay }: BookingPanelProps) {
   const [selected, setSelected] = useState<string[]>([]);
   const [requesterName, setRequesterName] = useState("");
-  const [sede, setSede] = useState<Sede>("ZACAPA");
+  const [cd, setCd] = useState<CD>("ZACAPA");
   const [salesPoint, setSalesPoint] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -74,7 +74,7 @@ export function BookingPanel({ dateKey, reservationsForDay }: BookingPanelProps)
         date: dateKey!,
         blocks: selected,
         requesterName,
-        sede,
+        cd,
         salesPoint,
       });
 
@@ -175,7 +175,7 @@ export function BookingPanel({ dateKey, reservationsForDay }: BookingPanelProps)
 
                 {taken && (
                   <p className="text-xs text-neutral-600 mt-1 dark:text-neutral-400">
-                    {taken.requesterName} · {sedeLabel(taken.sede)} → {taken.salesPoint}
+                    {taken.requesterName} · {cdLabel(taken.cd)} → {taken.salesPoint}
                   </p>
                 )}
               </button>
@@ -222,17 +222,17 @@ export function BookingPanel({ dateKey, reservationsForDay }: BookingPanelProps)
 
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-1 dark:text-neutral-300">
-              Sede
+              CD
             </label>
             <select
-              value={sede}
-              onChange={(e) => setSede(e.target.value as Sede)}
+              value={cd}
+              onChange={(e) => setCd(e.target.value as CD)}
               className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm bg-white
                 focus:outline-none focus:ring-2 focus:ring-neutral-800 focus:border-neutral-800
                 dark:border-neutral-600 dark:bg-neutral-900 dark:text-neutral-100
                 dark:focus:ring-neutral-400 dark:focus:border-neutral-400"
             >
-              {SEDES.map((s) => (
+              {CDS.map((s) => (
                 <option key={s.value} value={s.value}>
                   {s.label}
                 </option>
