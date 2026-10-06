@@ -1,0 +1,75 @@
+// Schema para el demo de reserva de la móvil (Guatemala, un solo vehículo).
+//
+// Decisiones para este alcance:
+// - No hay modelo User: por ahora no hay login. El nombre de quien reserva
+//   viene del formulario (requesterName). Cuando se agregue login por
+//   teléfono, ahí sí entra un modelo User y Reservation apunta a él.
+// - No hay modelo Mobile: hay una sola móvil. Si algún día son varias,
+//   se agrega Mobile y un mobileId en Reservation.
+// - `date` es String "YYYY-MM-DD" a propósito, no DateTime. Guardar el día
+//   como texto evita por completo los bugs de zona horaria (Guatemala es
+//   UTC-6), que es justo el tipo de detalle que hace que un demo se vea roto.
+// - `blocks` es una lista de ids de bloque separados por coma ("08-10,10-12").
+//   Con una sola móvil y pocos bloques por día, chequear el traslape en
+//   código es suficiente y se lee fácil.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Sede {
+  ZACAPA
+  PROGRESO
+  ESCUINTLA
+  BARBERENA
+}
+
+enum ReservationStatus {
+  ACTIVE
+  CANCELLED
+}
+
+enum AuditAction {
+  CREATED
+  CANCELLED
+}
+
+model Reservation {
+  id            String            @id @default(cuid())
+
+  date          String            // "YYYY-MM-DD" — el día reservado
+  blocks        String            // ids de bloques separados por coma: "08-10,10-12"
+
+  requesterName String            // quién va a usar la móvil
+  sede          Sede              // sede de origen (dropdown)
+  salesPoint    String            // punto de venta al que la llevan (texto libre)
+
+  status        ReservationStatus @default(ACTIVE)
+  createdAt     DateTime          @default(now())
+  cancelledAt   DateTime?
+
+  auditEntries  AuditLog[]
+
+  @@index([date, status])
+  @@map("reservations")
+}
+
+// Rastro de quién hizo qué. Con el login fuera, esto es lo único que
+// responde "¿quién reservó primero?" cuando haya un reclamo.
+model AuditLog {
+  id            String       @id @default(cuid())
+  action        AuditAction
+  actorName     String       // el nombre que se escribió en el formulario
+  reservationId String?
+  reservation   Reservation? @relation(fields: [reservationId], references: [id])
+  detail        String       // texto legible para mostrar en la tabla
+  createdAt     DateTime     @default(now())
+
+  @@index([reservationId])
+  @@map("audit_log")
+}
